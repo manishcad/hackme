@@ -8,14 +8,30 @@ export default function AdminLoginPage() {
   const [error, setError] = useState("");
 
   const router = useRouter();
-  const handleLogin = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (username === "dark-manish" && password === "Spiderman123") {
-      alert("Login successful!");
-      setError("");
-      router.push("/admin/dashboard");
-    } else {
-      setError("Invalid username or password");
+    setError("");
+
+    try {
+      const response = await fetch("/api/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ username, password }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        alert(data.message);
+        router.push("/admin/dashboard");
+      } else {
+        setError(data.message);
+      }
+    } catch (err) {
+      setError("An unexpected error occurred. Please try again.");
+      console.error(err);
     }
   };
 
@@ -27,7 +43,7 @@ export default function AdminLoginPage() {
             Sign in to your admin account
           </h2>
         </div>
-        <form className="mt-8 space-y-6" onSubmit={handleLogin} method="POST">
+        <form className="mt-8 space-y-6" onSubmit={handleLogin}>
           {error && <p className="text-red-500 text-sm">{error}</p>}
           <input type="hidden" name="remember" defaultValue="true" />
           <div className="rounded-md shadow-sm -space-y-px">
