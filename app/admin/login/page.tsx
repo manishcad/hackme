@@ -27,7 +27,7 @@ export default function AdminLoginPage() {
             Sign in to your admin account
           </h2>
         </div>
-        <form className="mt-8 space-y-6" onSubmit={handleLogin}>
+        <form className="mt-8 space-y-6" onSubmit={handleLogin} method="POST">
           {error && <p className="text-red-500 text-sm">{error}</p>}
           <input type="hidden" name="remember" defaultValue="true" />
           <div className="rounded-md shadow-sm -space-y-px">
